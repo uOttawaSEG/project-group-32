@@ -3,6 +3,7 @@ package com.example.project_group_32;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn() {
+
+        EditText etUsername, etUserPassword;
+
+        etUsername = findViewById(R.id.username);
+        etUserPassword = findViewById(R.id.user_password);
+
+        String username = etUsername.getText().toString().trim();
+        String password = etUserPassword.getText().toString().trim();
 
     }
 
