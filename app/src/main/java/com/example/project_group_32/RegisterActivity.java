@@ -1,31 +1,102 @@
 package com.example.project_group_32;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private RadioButton attendee, organizer;
-    private EditText firstName, lastName, email, password, phoneNumber, address;
+    private DatabaseHelper dbHelper;
+    private Button btRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        attendee = findViewById(R.id.attendeeRB);
-        organizer = findViewById(R.id.organizerRB);
+        dbHelper = new DatabaseHelper(this);
 
-        firstName = findViewById(R.id.firstname);
-        lastName = findViewById(R.id.lastname);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-        phoneNumber = findViewById(R.id.phone_number);
-        address = findViewById(R.id.address);
+        btRegister = findViewById(R.id.register_submit);
 
+        btRegister.setOnClickListener(v -> register());
+    }
 
+    private void register() {
+
+        RadioButton rbAttendee, rbOrganizer;
+        EditText etFirstName, etLastName, etEmail, etPassword, etPhoneNumber, etAddress, etOrganization;
+
+        rbAttendee = findViewById(R.id.attendeeRB);
+        rbOrganizer = findViewById(R.id.organizerRB);
+
+        etFirstName = findViewById(R.id.firstname);
+        etLastName = findViewById(R.id.lastname);
+        etEmail = findViewById(R.id.email);
+        etPassword = findViewById(R.id.password);
+        etPhoneNumber = findViewById(R.id.phone_number);
+        etAddress = findViewById(R.id.address);
+        etOrganization = findViewById(R.id.organization);
+
+        boolean isAttendee = rbAttendee.isActivated();
+        boolean isOranizer = rbOrganizer.isActivated();
+
+        String firstName = etFirstName.getText().toString().trim();
+        String lastName = etLastName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+        String phoneNumber = etPhoneNumber.getText().toString().trim();
+        String address = etAddress.getText().toString().trim();
+        String organization = etOrganization.getText().toString().trim();
+
+        if (firstName.isEmpty()) {
+            Toast.makeText(this, "First name cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (lastName.isEmpty()) {
+            Toast.makeText(this, "Last name cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Email cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Password cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (phoneNumber.isEmpty()) {
+            Toast.makeText(this, "Phone number cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (address.isEmpty()) {
+            Toast.makeText(this, "Address cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (isOranizer && organization.isEmpty()) {
+            Toast.makeText(this, "Organization cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (isAttendee) {
+            Attendee attendee = new Attendee(firstName, lastName, email, password, phoneNumber, address);
+            dbHelper.addUser(attendee);
+        } else {
+            Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organization);
+            dbHelper.addUser(organizer);
+        }
+
+        Toast.makeText(this, "User register successfully!", Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 }
