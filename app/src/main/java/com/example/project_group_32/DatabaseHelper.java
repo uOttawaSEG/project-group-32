@@ -2,6 +2,7 @@ package com.example.project_group_32;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -41,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_EMAIL, "admin@eams.com");
         values.put(KEY_PASSWORD, "password");
-        values.put(KEY_USER_TYPE, "administrator");
+        values.put(KEY_USER_TYPE, "Administrator");
 
         db.insert(TABLE_USER, null, values);
     }
@@ -63,13 +64,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_PHONE_NUMBER, user.getPhoneNumber());
         values.put(KEY_ADDRESS, user.getAddress());
         if (user instanceof Organizer) {
-            values.put(KEY_USER_TYPE, "organizer");
+            values.put(KEY_USER_TYPE, "Organizer");
             values.put(KEY_ORGANIZATION, ((Organizer) user).getOrganization());
         } else {
-            values.put(KEY_USER_TYPE, "attendee");
+            values.put(KEY_USER_TYPE, "Attendee");
         }
 
         db.insert(TABLE_USER, null, values);
         db.close();
+    }
+
+    public User getUser(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_USER, new String[] {
+                KEY_EMAIL, KEY_USER_TYPE, KEY_FIRST_NAME, KEY_LAST_NAME, KEY_PASSWORD, KEY_PHONE_NUMBER, KEY_ADDRESS, KEY_ORGANIZATION},
+                KEY_EMAIL + "=?", new String[]{username}, null, null, null, null);
+        User user = null;
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            String firstName = cursor.getString(2);
+            String lastName = cursor.getString(3);
+            String password = cursor.getString(4);
+            String phoneNumber = cursor.getString(5);
+            String address = cursor.getString(6);
+            String organization = cursor.getString(7);
+            if (cursor.getString(1).equals("Organizer")) {
+                user = new Organizer(firstName, lastName, username, password, phoneNumber, address, organization);
+            } else {
+                user = new Attendee(firstName, lastName, username, password, phoneNumber, address);
+            }
+        }
+        return user;
     }
 }
