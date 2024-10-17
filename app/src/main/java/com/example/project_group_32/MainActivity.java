@@ -43,22 +43,22 @@ public class MainActivity extends AppCompatActivity {
         String password = etUserPassword.getText().toString().trim();
 
         User user = dbHelper.getUser(username);
-        if (user == null) {
-            Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!user.getPassword().equals(password)) {
-            Toast.makeText(this, "Password does not correct!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (user == null) {
+//            Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (!user.getPassword().equals(password)) {
+//            Toast.makeText(this, "Password does not correct!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        Intent intent = new Intent(MainActivity.this, UserActivity.class);
+        Intent intent = new Intent(this, UserActivity.class);
         intent.putExtra("userInfo", user);
         startActivity(intent);
     }
 
     private void register() {
-        Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 }

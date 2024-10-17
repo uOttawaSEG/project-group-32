@@ -22,8 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RegisterActivity" android:exported="false"/>
-        <activity android:name=".UserActivity" android:exported="false"/>
+        <activity android:name="com.example.project_group_32.RegisterActivity" android:exported="false"/>
+        <activity android:name="com.example.project_group_32.UserActivity" android:exported="false"/>
 
     </application>
 

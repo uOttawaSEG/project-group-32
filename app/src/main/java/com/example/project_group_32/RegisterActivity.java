@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         etOrganization = findViewById(R.id.organization);
 
         boolean isAttendee = rbAttendee.isActivated();
-        boolean isOranizer = rbOrganizer.isActivated();
+        boolean isOrganizer = rbOrganizer.isActivated();
 
         String firstName = etFirstName.getText().toString().trim();
         String lastName = etLastName.getText().toString().trim();
@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (isOranizer && organization.isEmpty()) {
+        if (isOrganizer && organization.isEmpty()) {
             Toast.makeText(this, "Organization cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
