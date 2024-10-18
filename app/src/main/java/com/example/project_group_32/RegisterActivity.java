@@ -45,9 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
         etAddress = findViewById(R.id.address);
         etOrganization = findViewById(R.id.organization);
 
-        boolean isAttendee = rbAttendee.isActivated();
-        boolean isOrganizer = rbOrganizer.isActivated();
-
         String firstName = etFirstName.getText().toString().trim();
         String lastName = etLastName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
@@ -59,10 +56,16 @@ public class RegisterActivity extends AppCompatActivity {
         if (firstName.isEmpty()) {
             Toast.makeText(this, "First name cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
+        } else if (!Pattern.matches("\\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+", firstName)) {
+            Toast.makeText(this, "First name is not valid!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if (lastName.isEmpty()) {
             Toast.makeText(this, "Last name cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!Pattern.matches("\\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+", lastName)) {
+            Toast.makeText(this, "Last name is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -82,8 +85,8 @@ public class RegisterActivity extends AppCompatActivity {
         if (phoneNumber.isEmpty()) {
             Toast.makeText(this, "Phone number cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
-        } else if (!Pattern.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$", lastName)){
-            Toast.makeText(this, "Last name is not valid!", Toast.LENGTH_SHORT).show();
+        } else if (!Pattern.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$", phoneNumber)){
+            Toast.makeText(this, "Phone number is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -92,15 +95,15 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (isOrganizer && organization.isEmpty()) {
+        if (rbOrganizer.isChecked() && organization.isEmpty()) {
             Toast.makeText(this, "Organization cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (isAttendee) {
+        if (rbAttendee.isChecked()) {
             Attendee attendee = new Attendee(firstName, lastName, email, password, phoneNumber, address);
             dbHelper.addUser(attendee);
-        } else if (isOrganizer) {
+        } else if (rbOrganizer.isChecked()) {
             Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organization);
             dbHelper.addUser(organizer);
         } else {
