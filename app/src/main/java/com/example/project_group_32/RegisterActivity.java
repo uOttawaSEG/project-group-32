@@ -1,12 +1,16 @@
 package com.example.project_group_32;
 
 import android.os.Bundle;
+import android.os.PatternMatcher;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -55,15 +59,24 @@ public class RegisterActivity extends AppCompatActivity {
         if (firstName.isEmpty()) {
             Toast.makeText(this, "First name cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
+        } else if (!Pattern.matches("^[a-z ,.'-]+$", firstName)){
+            Toast.makeText(this, "First name is not valid!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if (lastName.isEmpty()) {
             Toast.makeText(this, "Last name cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
+        } else if (!Pattern.matches("^[a-z ,.'-]+$", lastName)){
+            Toast.makeText(this, "Last name is not valid!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if (email.isEmpty()) {
             Toast.makeText(this, "Email cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Email is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -74,6 +87,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (phoneNumber.isEmpty()) {
             Toast.makeText(this, "Phone number cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!Pattern.matches("^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$", lastName)){
+            Toast.makeText(this, "Last name is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -90,9 +106,12 @@ public class RegisterActivity extends AppCompatActivity {
         if (isAttendee) {
             Attendee attendee = new Attendee(firstName, lastName, email, password, phoneNumber, address);
             dbHelper.addUser(attendee);
-        } else {
+        } else if (isOrganizer) {
             Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organization);
             dbHelper.addUser(organizer);
+        } else {
+            Toast.makeText(this, "You must select one of roles!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Toast.makeText(this, "User register successfully!", Toast.LENGTH_SHORT).show();
