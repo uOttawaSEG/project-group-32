@@ -59,16 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (firstName.isEmpty()) {
             Toast.makeText(this, "First name cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
-        } else if (!Pattern.matches("^[a-z ,.'-]+$", firstName)){
-            Toast.makeText(this, "First name is not valid!", Toast.LENGTH_SHORT).show();
-            return;
         }
 
         if (lastName.isEmpty()) {
             Toast.makeText(this, "Last name cannot be empty!", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (!Pattern.matches("^[a-z ,.'-]+$", lastName)){
-            Toast.makeText(this, "Last name is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
 
