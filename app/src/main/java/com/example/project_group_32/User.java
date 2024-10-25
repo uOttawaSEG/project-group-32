@@ -3,38 +3,27 @@ package com.example.project_group_32;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String firstName, lastName, email, password, phoneNumber, address;
 
-    User (String firstName, String lastName, String email, String password, String phoneNumber, String address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+    private final String username;
+    private final String password;
+
+    public enum Type {
+        Administrator,
+        Attendee,
+        Organizer
+    }
+
+    User (String username, String password) {
+        this.username = username;
         this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getUsername() {
+        return username;
     }
 
-    public String getLastNmae() {
-        return lastName;
+    public boolean verify(String password) {
+        return this.password.equals(password);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
 }
