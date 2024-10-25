@@ -100,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        Userinfo userinfo = new Userinfo(firstName, lastName, phoneNumber, address, organization);
+        Userinfo userinfo = new Userinfo(firstName, lastName, email, phoneNumber, address, organization);
         if (rbAttendee.isChecked()) {
             if (dbHelper.hasUser(email) != -1) {
                 Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
