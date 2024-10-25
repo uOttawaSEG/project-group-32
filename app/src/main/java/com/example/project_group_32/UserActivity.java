@@ -1,6 +1,5 @@
 package com.example.project_group_32;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,14 +16,14 @@ public class UserActivity extends AppCompatActivity {
         TextView tvMessage = findViewById(R.id.message);
         Button btSignOff = findViewById(R.id.signoff);
 
-        User user = (User) getIntent().getSerializableExtra("userInfo");
+        User user = (User) getIntent().getSerializableExtra("user");
 
         String message = "Welcome! You are logged in as ";
         if (user instanceof Administrator) {
             message += "Administrator";
         } else if (user instanceof Attendee) {
             message += "Attendee";
-        } else {
+        } else if (user instanceof Organizer) {
             message += "Organizer";
         }
 

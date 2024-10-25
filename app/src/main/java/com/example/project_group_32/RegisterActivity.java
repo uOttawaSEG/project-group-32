@@ -1,7 +1,6 @@
 package com.example.project_group_32;
 
 import android.os.Bundle;
-import android.os.PatternMatcher;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +14,6 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
-    private Button btRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +21,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         dbHelper = new DatabaseHelper(this);
+
+        Button btRegister;
 
         btRegister = findViewById(R.id.register_submit);
 
@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (firstName.isEmpty()) {
             Toast.makeText(this, "First name cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
-        } else if (!Pattern.matches("\\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+", firstName)) {
+        } else if (!Pattern.matches("\\b([A-ZÀ-ÿ][-,a-z. ']+)+", firstName)) {
             Toast.makeText(this, "First name is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (lastName.isEmpty()) {
             Toast.makeText(this, "Last name cannot be empty!", Toast.LENGTH_SHORT).show();
             return;
-        } else if (!Pattern.matches("\\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+", lastName)) {
+        } else if (!Pattern.matches("\\b([A-ZÀ-ÿ][-,a-z. ']+)+", lastName)) {
             Toast.makeText(this, "Last name is not valid!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -100,12 +100,19 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        Userinfo userinfo = new Userinfo(firstName, lastName, phoneNumber, address, organization);
         if (rbAttendee.isChecked()) {
-            Attendee attendee = new Attendee(firstName, lastName, email, password, phoneNumber, address);
-            dbHelper.addUser(attendee);
+            if (dbHelper.hasUser(email) != -1) {
+                Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            dbHelper.addAttendee(email, password, userinfo);
         } else if (rbOrganizer.isChecked()) {
-            Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organization);
-            dbHelper.addUser(organizer);
+            if (dbHelper.hasUser(email) != -1) {
+                Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            dbHelper.addOrganizer(email, password, userinfo);
         } else {
             Toast.makeText(this, "You must select one of roles!", Toast.LENGTH_SHORT).show();
             return;

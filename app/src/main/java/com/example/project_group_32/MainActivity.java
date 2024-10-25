@@ -2,15 +2,11 @@ package com.example.project_group_32;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,18 +38,31 @@ public class MainActivity extends AppCompatActivity {
         String username = etUsername.getText().toString().trim();
         String password = etUserPassword.getText().toString().trim();
 
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Username cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
+            Toast.makeText(this, "Username is not valid!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(this, "Password cannot be empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         User user = dbHelper.getUser(username);
         if (user == null) {
             Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!user.getPassword().equals(password)) {
+        if (!user.verify(password)) {
             Toast.makeText(this, "Password does not correct!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Intent intent = new Intent(this, UserActivity.class);
-        intent.putExtra("userInfo", user);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 
