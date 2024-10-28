@@ -18,6 +18,11 @@ public class UserActivity extends AppCompatActivity {
 
         User user = (User) getIntent().getSerializableExtra("user");
 
+        tvMessage.setText(welcome(user));
+        btSignOff.setOnClickListener(v -> signOff());
+    }
+
+    public String welcome(User user) {
         String message = "Welcome! You are logged in as ";
         if (user instanceof Administrator) {
             message += "Administrator";
@@ -26,13 +31,10 @@ public class UserActivity extends AppCompatActivity {
         } else if (user instanceof Organizer) {
             message += "Organizer";
         }
-
-        tvMessage.setText(message);
-
-        btSignOff.setOnClickListener(v -> signOff());
+        return message;
     }
 
-    private void signOff() {
+    public void signOff() {
         finish();
     }
 }

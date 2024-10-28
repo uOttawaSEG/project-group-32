@@ -52,18 +52,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
         User user = dbHelper.getUser(username);
-        if (user == null) {
-            Toast.makeText(this, "User does not exist!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!user.verify(password)) {
-            Toast.makeText(this, "Password does not correct!", Toast.LENGTH_SHORT).show();
-            return;
+        if (user != null) {
+            if (!user.verify(password)) {
+                Toast.makeText(this, "Password does not correct!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else {
+            Request.Status status = dbHelper.getRequestStatus(username);
+            if (status == null) {
+                Toast.makeText(this, "User does not submit any request!", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (status == Request.Status.Processing) {
+                Toast.makeText(this, "User request is processing!", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (status == Request.Status.Rejected) {
+                Toast.makeText(this, "User request is rejected! Please contact the Administrator on 888-888-8888", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
-        Intent intent = new Intent(this, UserActivity.class);
-        intent.putExtra("user", user);
-        startActivity(intent);
+        if (user instanceof Administrator) {
+            Intent intent = new Intent(this, AdministratorActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        } else {
+            assert user != null;
+            Intent intent = new Intent(this, UserActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
+        }
     }
 
     private void register() {

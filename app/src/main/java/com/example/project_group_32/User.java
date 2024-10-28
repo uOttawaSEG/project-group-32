@@ -7,7 +7,7 @@ public class User implements Serializable {
     private final String username;
     private final String password;
 
-    public enum Type {
+    public enum Role {
         Administrator,
         Attendee,
         Organizer

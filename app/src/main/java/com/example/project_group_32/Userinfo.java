@@ -1,5 +1,7 @@
 package com.example.project_group_32;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class Userinfo implements Serializable {
@@ -37,5 +39,11 @@ public class Userinfo implements Serializable {
 
     public String getOrganization() {
         return organization;
+    }
+
+    @NonNull
+    public String toString() {
+        return firstName + "|\t" + lastName + "|\t" + email + "|\t" + phoneNumber
+                + "|\t" + address + "|\t" + organization;
     }
 }

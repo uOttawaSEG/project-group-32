@@ -102,23 +102,15 @@ public class RegisterActivity extends AppCompatActivity {
 
         Userinfo userinfo = new Userinfo(firstName, lastName, email, phoneNumber, address, organization);
         if (rbAttendee.isChecked()) {
-            if (dbHelper.hasUser(email) != -1) {
-                Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            dbHelper.addAttendee(email, password, userinfo);
+            dbHelper.addRequest(email, password, User.Role.Attendee, userinfo);
         } else if (rbOrganizer.isChecked()) {
-            if (dbHelper.hasUser(email) != -1) {
-                Toast.makeText(this, "User already exists!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            dbHelper.addOrganizer(email, password, userinfo);
+            dbHelper.addRequest(email, password, User.Role.Organizer, userinfo);
         } else {
             Toast.makeText(this, "You must select one of roles!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(this, "User register successfully!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "User register request has been submitted!", Toast.LENGTH_SHORT).show();
 
         finish();
     }
