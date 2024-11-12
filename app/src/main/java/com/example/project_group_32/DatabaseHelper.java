@@ -13,6 +13,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String USER_TABLE = "users";
     private static final String USERINFO_TABLE = "userinfo";
     private static final String REQUEST_TABLE = "requests";
+    private static final String EVENT_TABLE = "events";
 
 
     private static final String KEY_ID = "id";
@@ -26,6 +27,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_PHONE_NUMBER = "phone_number";
     private static final String KEY_ADDRESS = "address";
     private static final String KEY_ORGANIZATION = "organization";
+    private static final String KEY_TITLE = "title";
+    private static final String KEY_DESCRIPTION = "description";
+    private static final String KEY_DATE = "date";
+    private static final String KEY_START_TIME = "start_time";
+    private static final String KEY_END_TIME = "end_time";
+    private static final String KEY_MODE = "mode";
 
     DatabaseHelper (Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -55,9 +62,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + KEY_USERNAME + " TEXT NOT NULL,"
                 + KEY_PASSWORD + " TEXT NOT NULL)";
 
+        String CREATE_EVENT_TABLE = "CREATE TABLE " + EVENT_TABLE + " ("
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KEY_TITLE + " TEXT,"
+                + KEY_DESCRIPTION + " TEXT,"
+                + KEY_DATE + " TEXT,"
+                + KEY_START_TIME + " TEXT,"
+                + KEY_END_TIME + " TEXT,"
+                + KEY_ADDRESS + " TEXT,"
+                + KEY_MODE + " INTEGER)";
+
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_USERINFO_TABLE);
         db.execSQL(CREATE_REQUEST_TABLE);
+        db.execSQL(CREATE_EVENT_TABLE);
 
         ContentValues values = new ContentValues();
         values.put(KEY_ID, 0);
@@ -124,7 +142,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user_values.put(KEY_PASSWORD, password);
 
         long id = db.insert(REQUEST_TABLE, null, user_values);
-        assert id != -1;
         addUserinfo(id, userinfo);
     }
 
@@ -134,30 +151,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_STATUS, status.ordinal());
         db.update(REQUEST_TABLE, values, KEY_ID + " = ?", new String[]{String.valueOf(id)});
-    }
-
-    public void addUser(long id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.query(REQUEST_TABLE,
-                new String[] {KEY_ROLE, KEY_USERNAME, KEY_PASSWORD},
-                KEY_ID + " LIKE " + "'%" + id + "%'",
-                null, null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int role_ord = Integer.parseInt(cursor.getString(0));
-            String username = cursor.getString(1);
-            String password = cursor.getString(2);
-
-            ContentValues values = new ContentValues();
-            values.put(KEY_ID, id);
-            values.put(KEY_USERNAME, username);
-            values.put(KEY_PASSWORD, password);
-            values.put(KEY_ROLE, role_ord);
-
-            db.insert(USER_TABLE, null, values);
-            cursor.close();
-        }
     }
 
     public Request.Status getRequestStatus(String username) {
@@ -201,6 +194,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return requests;
     }
 
+    public void addUser(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(REQUEST_TABLE,
+                new String[] {KEY_ROLE, KEY_USERNAME, KEY_PASSWORD},
+                KEY_ID + " LIKE " + "'%" + id + "%'",
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int role_ord = Integer.parseInt(cursor.getString(0));
+            String username = cursor.getString(1);
+            String password = cursor.getString(2);
+
+            ContentValues values = new ContentValues();
+            values.put(KEY_ID, id);
+            values.put(KEY_USERNAME, username);
+            values.put(KEY_PASSWORD, password);
+            values.put(KEY_ROLE, role_ord);
+
+            db.insert(USER_TABLE, null, values);
+            cursor.close();
+        }
+    }
+
     public User getUser(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -231,5 +248,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return user;
+    }
+
+    public void addEvent(Event event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TITLE, event.getTitle());
+        values.put(KEY_DESCRIPTION, event.getDescription());
+        values.put(KEY_DATE, event.getDate());
+        values.put(KEY_START_TIME, event.getStartTime());
+        values.put(KEY_END_TIME, event.getEndTime());
+        values.put(KEY_ADDRESS, event.getAddress());
+        values.put(KEY_MODE, event.getMode().ordinal());
+
+        db.insert(EVENT_TABLE, null, values);
+    }
+
+    public void deleteEvent(Event event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(EVENT_TABLE, KEY_ID + " = ?",
+                new String[]{String.valueOf(event.getId())});
+        db.close();
+    }
+
+    public ArrayList<Event> getEvents() {
+        ArrayList<Event> events = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String SELECT_QUERY = "SELECT * FROM " + EVENT_TABLE;
+        Cursor cursor = db.rawQuery(SELECT_QUERY, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long id = Long.parseLong(cursor.getString(0));
+                String title = cursor.getString(1);
+                String description = cursor.getString(2);
+                String date = cursor.getString(3);
+                String start_time = cursor.getString(4);
+                String end_time = cursor.getString(5);
+                String address = cursor.getString(6);
+                int mode_ord = Integer.parseInt(cursor.getString(7));
+                Event event = new Event(id, title, description, date, start_time, end_time, address, Event.Mode.values()[mode_ord]);
+                events.add(event);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return events;
     }
 }

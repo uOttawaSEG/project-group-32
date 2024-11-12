@@ -75,8 +75,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AdministratorActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
+        } else if (user instanceof Organizer) {
+            Intent intent = new Intent(this, OrganizerActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
         } else {
-            assert user != null;
             Intent intent = new Intent(this, UserActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);

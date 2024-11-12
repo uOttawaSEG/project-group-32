@@ -28,6 +28,10 @@ public class Request {
         return id;
     }
 
+    public User.Role getRole() {
+        return role;
+    }
+
     public Status getStatus() {
         return status;
     }
