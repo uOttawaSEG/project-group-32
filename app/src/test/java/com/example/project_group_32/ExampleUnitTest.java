@@ -1,5 +1,6 @@
 package com.example.project_group_32;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,8 +11,17 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    private NameValidate nameValidate;
+
+    @Before
+    public void setUp() {
+        nameValidate = new NameValidate();
+    }
+
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void testFirstName() {
+        assertTrue(nameValidate.isNameValid("Jack"));
+        assertFalse(nameValidate.isNameValid("123"));
     }
 }
