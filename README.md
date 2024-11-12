@@ -1,5 +1,5 @@
 Administrator
 
-username: admin@eams.com / admin@esms.com
+username: admin@esms.com
 
 password: password
