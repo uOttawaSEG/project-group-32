@@ -1,7 +1,5 @@
 package com.example.project_group_32;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.regex.Pattern;
 
 public class NameValidate {

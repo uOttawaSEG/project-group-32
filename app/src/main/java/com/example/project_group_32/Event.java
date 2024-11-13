@@ -11,7 +11,7 @@ public class Event implements Serializable {
     public enum Mode {
         manual,
         auto
-    };
+    }
 
     private final Mode mode;
 

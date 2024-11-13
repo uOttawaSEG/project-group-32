@@ -1,7 +1,6 @@
 package com.example.project_group_32;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -9,17 +8,12 @@ import android.widget.ListView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import java.util.ArrayList;
 
 public class AttendeeManagementActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
     private ArrayAdapter<String> adapter;
-    private ArrayList<Request> attendees;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +38,7 @@ public class AttendeeManagementActivity extends AppCompatActivity {
     }
 
     private void updateAttendeeList() {
-        attendees = dbHelper.getRequests();
+        ArrayList<Request> attendees = dbHelper.getRequests();
         adapter.clear();
         for (Request request : attendees) {
             if (request.getRole() != User.Role.Attendee) continue;
