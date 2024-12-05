@@ -71,16 +71,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (user instanceof Administrator) {
+        assert user != null;
+        if (user.getRole() == User.Role.Administrator) {
             Intent intent = new Intent(this, AdministratorActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
-        } else if (user instanceof Organizer) {
+        } else if (user.getRole() == User.Role.Organizer) {
             Intent intent = new Intent(this, OrganizerActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, UserActivity.class);
+        } else if (user.getRole() == User.Role.Attendee){
+            Intent intent = new Intent(this, AttendeeActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
         }

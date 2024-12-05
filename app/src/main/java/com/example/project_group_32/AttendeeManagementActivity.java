@@ -14,6 +14,8 @@ public class AttendeeManagementActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
     private ArrayAdapter<String> adapter;
+    private ArrayList<EventRequest> results;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,22 +29,24 @@ public class AttendeeManagementActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        Event event = (Event) getIntent().getSerializableExtra("event");
+        event = (Event) getIntent().getSerializableExtra("event");
         lvAttendees.setOnItemLongClickListener((parent, view, position, id) -> {
             processAttendee(position);
             return true;
         });
+        results = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         lvAttendees.setAdapter(adapter);
-        updateAttendeeList();
+        updateRequestList();
     }
 
-    private void updateAttendeeList() {
-        ArrayList<Request> attendees = dbHelper.getRequests();
+    private void updateRequestList() {
+        results.clear();
         adapter.clear();
-        for (Request request : attendees) {
-            if (request.getRole() != User.Role.Attendee) continue;
-            adapter.add(request.toString());
+        for (EventRequest request : dbHelper.getEventRequests()) {
+            if (request.getEventId() != event.getId()) continue;
+            results.add(request);
+            adapter.add(request.getStatus() + "|\t" + dbHelper.getUserinfo(request.getUserId()));
         }
         adapter.notifyDataSetChanged();
     }
@@ -51,8 +55,12 @@ public class AttendeeManagementActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Attendee Management")
                 .setNegativeButton("Reject", (dialog, which) -> {
+                    dbHelper.updateEventRequest(results.get(position).getId(), Request.Status.Rejected);
+                    updateRequestList();
                 })
                 .setPositiveButton("Approve", (dialog, which) -> {
+                    dbHelper.updateEventRequest(results.get(position).getId(), Request.Status.Approved);
+                    updateRequestList();
                 })
                 .show();
     }

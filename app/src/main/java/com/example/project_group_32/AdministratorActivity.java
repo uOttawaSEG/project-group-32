@@ -28,6 +28,7 @@ public class AdministratorActivity extends UserActivity {
         dbHelper = new DatabaseHelper(this);
 
         ListView lvRequests = findViewById(R.id.requests);
+        requests = new ArrayList<>();
 
         TextView tvMessage = findViewById(R.id.message);
         User user = (User) getIntent().getSerializableExtra("user");
@@ -58,11 +59,13 @@ public class AdministratorActivity extends UserActivity {
     }
 
     private void updateRequestList() {
-        requests = dbHelper.getRequests();
+        ArrayList<Request> reqs = dbHelper.getRequests();
+        requests.clear();
         adapter.clear();
-        for (Request request : requests) {
+        for (Request request : reqs) {
             if (request.getStatus() == Request.Status.Approved) continue;
             adapter.add(request.toString());
+            requests.add(request);
         }
         adapter.notifyDataSetChanged();
     }

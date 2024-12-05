@@ -215,6 +215,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Event created successfully!", Toast.LENGTH_SHORT).show();
 
+
         finish();
     }
 }

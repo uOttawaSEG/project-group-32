@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 
@@ -68,6 +69,19 @@ public class OrganizerActivity extends UserActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Event Management")
                 .setNegativeButton("Delete Event", (dialog, which) -> {
+
+                    boolean hasRegistration = false;
+                    for (EventRequest request : dbHelper.getEventRequests()) {
+                        if (request.getEventId() == event.getId()) {
+                            hasRegistration = true;
+                            break;
+                        }
+                    }
+
+                    if (hasRegistration) {
+                        Toast.makeText(this, "You cannot delete event that has registration!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     dbHelper.deleteEvent(event);
                     updateEventsList();
                 })
@@ -79,7 +93,7 @@ public class OrganizerActivity extends UserActivity {
                 .show();
     }
 
-    private Date convertDate(String s) {
+    public static Date convertDate(String s) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm", Locale.CANADA);
         Date date;
         try {
@@ -111,6 +125,12 @@ public class OrganizerActivity extends UserActivity {
     private void createEvent() {
         Intent intent = new Intent(this, CreateEventActivity.class);
         startActivity(intent);
+        updateEventsList();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
         updateEventsList();
     }
 }

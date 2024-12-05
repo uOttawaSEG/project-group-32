@@ -3,11 +3,14 @@ package com.example.project_group_32;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Event implements Serializable {
 
     private long id;
     private final String title, description, date, startTime, endTime, address;
+
+    private ArrayList<Long> users;
     public enum Mode {
         manual,
         auto
@@ -25,7 +28,7 @@ public class Event implements Serializable {
         this.mode = mode;
     }
 
-    public Event (long id, String title, String description, String date, String startTime, String endTime, String address, Mode mode) {
+    public Event (long id, String title, String description, String date, String startTime, String endTime, String address, Mode mode, ArrayList<Long> users) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -34,6 +37,11 @@ public class Event implements Serializable {
         this.endTime = endTime;
         this.address = address;
         this.mode = mode;
+        this.users = users;
+    }
+
+    public ArrayList<Long> getUsers() {
+        return users;
     }
 
     public long getId() {
