@@ -1,26 +1,18 @@
 package com.example.project_group_32;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 
@@ -32,6 +24,7 @@ public class AttendeeActivity extends UserActivity {
     private ArrayList<EventRequest> result_events;
     private User currentUser;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +68,7 @@ public class AttendeeActivity extends UserActivity {
         }
     }
 
+    @SuppressLint("NewApi")
     private void processEvents(EventRequest request) {
         new AlertDialog.Builder(this)
                 .setTitle("Event Request Cancel")
@@ -104,7 +98,6 @@ public class AttendeeActivity extends UserActivity {
 
         for (EventRequest request : events) {
             if (request.getUserId() == currentUser.getId()) {
-                Event event = dbHelper.getEvent(request.getEventId());
                 result_events.add(request);
             }
         }

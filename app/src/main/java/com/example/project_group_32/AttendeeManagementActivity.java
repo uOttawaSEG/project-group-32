@@ -66,5 +66,6 @@ public class AttendeeManagementActivity extends AppCompatActivity {
     }
 
     private void approveAll() {
+
     }
 }
